@@ -65,4 +65,50 @@ class qa_donations_payzone_widget {
             </form>';
     }
 
+    function admin_form(&$qa_content)
+    {
+
+        // Process form input
+
+        $ok = null;
+
+        if (qa_clicked('payzone_save')) {
+            qa_opt('payzone_merchant_id', qa_post_text('payzone_merchant_id'));
+            qa_opt('payzone_merchant_password', qa_post_text('payzone_merchant_password'));
+
+            $ok = qa_lang('admin/options_saved');
+        }
+
+
+        // Create the form for display
+
+
+        $fields = array();
+
+        $fields[] = array(
+            'label' => 'Merchant id',
+            'tags' => 'NAME="payzone_merchant_id"',
+            'value' => qa_opt('payzone_merchant_id'),
+            'type' => 'text');
+
+        $fields[]= array(
+                'label' => 'Merchant password',
+                'tags' => 'NAME="payzone_merchant_password"',
+                'value' => qa_opt('payzone_merchant_password'),
+                'type' => 'text',
+        );
+
+        return array(
+            'ok' => ($ok && !isset($error)) ? $ok : null,
+
+            'fields' => $fields,
+
+            'buttons' => array(
+                array(
+                    'label' => qa_lang_html('main/save_button'),
+                    'tags' => 'NAME="payzone_save"',
+                ),
+            ),
+        );
+    }
 }

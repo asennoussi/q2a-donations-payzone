@@ -42,3 +42,13 @@ qa_register_plugin_module(
     'qa_donations_payzone_process', // name of module class
     'Process call back of plugin' // human-readable name of module
 );
+qa_register_plugin_module(
+    'page', // type of module
+    'qa-donations-payzone-thank.php', // PHP file containing module class
+    'qa_donations_payzone_thank', // name of module class
+    'Thank you page' // human-readable name of module
+);
+qa_register_plugin_phrases(
+    'qa-donations-payzone-lang-*.php', // pattern for language files
+    'plugin_donations_payzone' // prefix to retrieve phrases
+);

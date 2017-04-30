@@ -6,6 +6,8 @@ class qa_donations_payzone_page {
     const SHIPPING_TYPE = 'Virtual';
     const PAYMENT_MODE = 'Single';
     const MERCHANT_EMAIL = 'aymane.sennoussi@gmail.com';
+    const CONNECT_GATEWAY = 'https://paiement.payzone.ma';
+
 
     function match_request($request)
     {
@@ -22,23 +24,18 @@ class qa_donations_payzone_page {
             require_once 'Connect2PayClient.php';
 
             $connect2pay = 'https://paiement.payzone.ma';
-            $merchant = '104469';
-            $password = '#3g250X9Y9Hj67To';
+            $merchant = qa_opt('payzone_merchant_id');
+            $password = qa_opt('payzone_merchant_password');
+
             /*
              * Initialize the payment using the class Connect2PayClient.php
              * */
-            $c2pClient = new Connect2PayClient($connect2pay, $merchant, $password);
+
+            $c2pClient = new Connect2PayClient(self::CONNECT_GATEWAY, $merchant, $password);
             $first_name = qa_post_text('first_name');
             $last_name = qa_post_text('last_name_name');
             $phone = qa_post_text('phone_number');
             $userId = qa_get_logged_in_userid()?qa_get_logged_in_userid():qa_cookie_get();
-            $code = '';
-
-            qa_db_query_sub(
-                'INSERT INTO ^donators (userid, date, amount,phone, code,status)'.
-                'VALUES ($,NOW(), $, $, $, 0)',
-                $userId, $amount, $phone, $code
-            );
 
             $c2pClient->setOrderID(self::ORDER_ID);
             $c2pClient->setCurrency(self::CURRENCY);
@@ -50,15 +47,20 @@ class qa_donations_payzone_page {
             $c2pClient->setShopperFirstName($first_name);
             $c2pClient->setShopperLastName($last_name);
             $c2pClient->setShopperPhone($phone);
-            $c2pClient->setCtrlRedirectURL(qa_opt('site_url').'thank-you');
-            $c2pClient->setCtrlCallbackURL(qa_opt('site_url').'process-donation');
+            $c2pClient->setCtrlRedirectURL(qa_opt('site_url').'process-donation');
+            $c2pClient->setCtrlCallbackURL(qa_opt('site_url').'thank-you');
 
             if ($c2pClient->validate()) {
                 $c2pClient->prepareTransaction();
                 // Create the payment transaction on the payment pa
                 // We can save in session the token info returned by the payment page (could
                 // be used later when the customer will return from the payment page)
-            $_SESSION['merchantToken'] = $c2pClient->getMerchantToken();
+            $_SESSION['merchantToken'] = $code = $c2pClient->getMerchantToken();
+                qa_db_query_sub(
+                    'INSERT INTO ^donators (userid, date, amount,phone, code,status)'.
+                    'VALUES ($,NOW(), $, $, $, 0)',
+                    $userId, $amount, $phone, $code
+                );
 
             // If setup is correct redirect the customer to the payment page.
             header('Location: ' . $c2pClient->getCustomerRedirectURL().'?lang=fr');
@@ -72,30 +74,30 @@ class qa_donations_payzone_page {
 
 
         $qa_content=qa_content_prepare();
-        $qa_content['title']='Donation page';
-        $qa_content['custom'] = 'أنتم تقومون بدعم موقع محكمتي بمبلغ '.'<b>'.$parts[1].'</b> درهم  '.'<br>شكرا لكم.' ;
+        $qa_content['title']=str_replace('^1',qa_opt('site_title'),qa_lang_html('plugin_donations_payzone/donation_title'));
+        $qa_content['custom'] =str_replace(['^1','^2'],['<b>'.qa_opt('site_title').'</b>','<b>'.$parts[1].'</b>'],qa_lang_html('plugin_donations_payzone/donation_body'));
         $qa_content['form']=array(
             'tags' => 'method="post" action="'.qa_self_html().'"',
 
             'style' => 'tall',
 
-            'title' => 'عرفونا عن نفسكم',
+            'title' => qa_lang_html('plugin_donations_payzone/tell_us_about_you'),
 
             'fields' => array(
                 'first_name' => array(
-                    'label' => 'الإسم الشخصي',
+                    'label' => qa_lang_html('plugin_donations_payzone/first_name'),
                     'tags' => 'name="first_name"',
                     'value' => '',
                     # 'error' => qa_html('Another error'),
                 ),
                 'last_name' => array(
-                    'label' => 'الإسم العائلي',
+                    'label' => qa_lang_html('plugin_donations_payzone/last_name'),
                     'tags' => 'name="last_name"',
                     'value' => '',
                 ),
 
                 'phone_number' => array(
-                    'label' => 'رقم الهاتف',
+                    'label' => qa_lang_html('plugin_donations_payzone/phone_number'),
                     'tags' => 'name="phone_number"',
                     'value' => '',
                 ),
@@ -105,7 +107,7 @@ class qa_donations_payzone_page {
             'buttons' => array(
                 'ok' => array(
                     'tags' => 'name="ok" type="submit" ',
-                    'label' => 'تابع',
+                    'label' => qa_lang_html('plugin_donations_payzone/proceed'),
                     'value' => '1',
                 ),
             ),
