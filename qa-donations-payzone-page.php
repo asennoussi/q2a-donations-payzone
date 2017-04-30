@@ -49,7 +49,6 @@ class qa_donations_payzone_page {
             $c2pClient->setShopperPhone($phone);
             $c2pClient->setCtrlRedirectURL(qa_opt('site_url').'process-donation');
             $c2pClient->setCtrlCallbackURL(qa_opt('site_url').'thank-you');
-
             if ($c2pClient->validate()) {
                 $c2pClient->prepareTransaction();
                 // Create the payment transaction on the payment pa
