@@ -31,6 +31,7 @@ class qa_donations_payzone_page {
              * Initialize the payment using the class Connect2PayClient.php
              * */
 
+
             $c2pClient = new Connect2PayClient(self::CONNECT_GATEWAY, $merchant, $password);
             $first_name = qa_post_text('first_name');
             $last_name = qa_post_text('last_name_name');
@@ -47,8 +48,9 @@ class qa_donations_payzone_page {
             $c2pClient->setShopperFirstName($first_name);
             $c2pClient->setShopperLastName($last_name);
             $c2pClient->setShopperPhone($phone);
-            $c2pClient->setCtrlRedirectURL(qa_opt('site_url').'process-donation');
-            $c2pClient->setCtrlCallbackURL(qa_opt('site_url').'thank-you');
+            $c2pClient->setCtrlRedirectURL(qa_opt('site_url').'thank-you');
+            $c2pClient->setCtrlCallbackURL(qa_opt('site_url').'process-donation');
+
             if ($c2pClient->validate()) {
                 $c2pClient->prepareTransaction();
                 // Create the payment transaction on the payment pa
