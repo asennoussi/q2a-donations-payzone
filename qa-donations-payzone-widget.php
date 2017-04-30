@@ -31,27 +31,38 @@ class qa_donations_payzone_widget {
     }
     function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
     {
+        $baseUrl = qa_opt('site_url');
         echo '
-            <form method="post" action="#">
+            <script type="text/javascript">
+            var baseUrl = "'.$baseUrl.'";
+                $(document).ready(function(){
+                 $("#fader").on("input change", function() {
+                    $("#donation-value").text(this.value);
+                    $("#donation-form").attr("action",baseUrl+"donation/"+this.value+"/");
+                 });
+                })
+
+            </script>
+            <form method="get" id="donation-form" action="'.$baseUrl.'donation/350">
             <label for="fader"><h2 align="center">إدعم موقع محكمتي</h2></label>
             <ul class="qa-q-item-tag-list">
 					    <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >100 درهم</a>
+                            <a href="'.$baseUrl.'/donation/100" class="donation-link" >100 درهم</a>
                         </li>
 					    <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >200 درهم</a>
+                            <a href="'.$baseUrl.'/donation/200" class="donation-link" >200 درهم</a>
                         </li>
                         <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >300 درهم</a>
+                            <a href="'.$baseUrl.'/donation/300" class="donation-link" >300 درهم</a>
                         </li>
 					    <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >500 درهم</a>
+                            <a href="'.$baseUrl.'/donation/500" class="donation-link" >500 درهم</a>
                         </li>
 					    <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >1000 درهم</a>
+                            <a href="'.$baseUrl.'/donation/1000" class="donation-link" >1000 درهم</a>
                         </li>
 					    <li class="qa-q-item-tag-item">
-                            <a href="#" class="donation-link" >2000 درهم</a>
+                            <a href="'.$baseUrl.'/donation/2000" class="donation-link" >2000 درهم</a>
                         </li>
                     </ul>
                     <div class="separator">

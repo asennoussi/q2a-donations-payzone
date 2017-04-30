@@ -12,7 +12,7 @@ class qa_donations_payzone_page {
     function match_request($request)
     {
         $parts=explode('/', $request);
-        return $parts[0]=='donation' && isset($parts[1]) && intval($parts[1])%100==0 && intval($parts[1])>0 ;
+        return $parts[0]=='donation' && isset($parts[1]) && intval($parts[1])%50==0 && intval($parts[1])>0 ;
     }
 
     function process_request($request)

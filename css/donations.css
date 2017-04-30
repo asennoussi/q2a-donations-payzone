@@ -183,6 +183,9 @@ input[type=range]:focus::-ms-fill-upper {
     background-color: #FFFFFF;
     padding: 0 10px;
 }
+.qa-a-count-zero:focus{
+    background-color: #e74c3c;
+}
 #heart {
     position: relative;
     width: 100px;
