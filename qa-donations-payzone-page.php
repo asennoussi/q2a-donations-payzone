@@ -36,7 +36,7 @@ class qa_donations_payzone_page {
             $first_name = qa_post_text('first_name');
             $last_name = qa_post_text('last_name_name');
             $phone = qa_post_text('phone_number');
-            $userId = qa_get_logged_in_userid()?qa_get_logged_in_userid():qa_cookie_get();
+            $userId = qa_get_logged_in_userid()?qa_get_logged_in_userid():qa_cookie_get_create();
 
             $c2pClient->setOrderID(self::ORDER_ID);
             $c2pClient->setCurrency(self::CURRENCY);
